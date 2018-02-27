@@ -28,8 +28,8 @@ public class Agenda {
         return conn;
     }
 
-    public void listar() throws ClassNotFoundException, SQLException {
-
+    public List<Pessoa> listar() throws ClassNotFoundException, SQLException {
+        List<Pessoa> lista = new ArrayList<Pessoa>();
         try (Connection conn = obterConexao();
                 PreparedStatement stmt = conn.prepareStatement(
                         "SELECT id, nome, dtnascimento FROM PESSOA");
@@ -39,9 +39,15 @@ public class Agenda {
                 long id = resultados.getLong("id");
                 String nome = resultados.getString("nome");
                 Date dtNascimento = resultados.getDate("dtnascimento");
-                System.out.println(id + ", " + nome + ", " + dtNascimento);
+                Pessoa p = new Pessoa();
+                p.setId(id);
+                p.setNome(nome);
+                p.setDNascimento(dtNascimento);
+                lista.add(p);
+//                System.out.println(id + ", " + nome + ", " + dtNascimento);
             }
         }
+        return lista;
     }
     
     public void incluir() throws ClassNotFoundException, SQLException {
@@ -63,7 +69,10 @@ public class Agenda {
 
         try {
             agenda.incluir();
-            agenda.listar();
+            List<Pessoa> lista =  agenda.listar();
+            for (Pessoa p : lista){
+                System.out.println(p.getId() + ", " + p.getNome + ", " + p.getDtNascimento)
+            }
         } catch (ClassNotFoundException ex) {
             System.err.println(ex.getMessage());
         } catch (SQLException ex) {
